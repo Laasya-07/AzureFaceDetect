@@ -1,37 +1,34 @@
 'use strict';
 
-const axios = require('axios').default;
+const request=require('request');
+const subscriptionKey='92c231de55fc4da386173681266a7d01';
 
-// Add a valid subscription key and endpoint to your environment variables.
-let subscriptionKey = process.env['c86efaeda28a40ea968def2f59b33dc5']
-let endpoint = process.env['https://faceapikey.cognitiveservices.azure.com/'] + '/face/v1.0/detect'
+const uriBase='https://faceapikey.cognitiveservices.azure.com/face/v1.0/detect';
 
-// Optionally, replace with your own image URL (for example a .jpg or .png URL).
-let imageUrl = 'https://raw.githubusercontent.com/Azure-Samples/cognitive-services-sample-data-files/master/ComputerVision/Images/faces.jpg'
+const imageUrl='http://i.huffpost.com/gen/2500992/images/o-CRICKET-TEAM-INDIA-facebook.jpg';
 
-// Send a POST request
-axios({
-    method: 'post',
-    url: endpoint,
-    params : {
-        detectionModel: 'detection_02',
-        returnFaceId: true
-    },
-    data: {
-        url: imageUrl,
-    },
-    headers: { 'Ocp-Apim-Subscription-Key': subscriptionKey }
-}).then(function (response) {
-    console.log('Status text: ' + response.status)
-    console.log('Status text: ' + response.statusText)
-    console.log()
-    console.log(response.data)
-}).catch(function (error) {
-    console.log(error)
+const params={
+    'returnFaceId':'true',
+    'returnFaceLandmarks':'false',
+    'returnFaceAttributes':'age,gender,emotion,hair,smile'
+};
+
+const options={
+    uri:uriBase,
+    qs:params,
+    body:'{"url":'+'"'+imageUrl+'"}',
+    headers:{
+        'Content-Type':'application/json',
+        'Ocp-Apim-Subscription-Key':subscriptionKey
+    }
+};
+
+request.post(options,(error,response,body)=>{
+    if(error){
+        console.log('Error:',error);
+        return;
+    }
+    let jsonResponse=JSON.stringify(JSON.parse(body),null,' ');
+    console.log('JSON Response\n');
+    console.log(jsonResponse);
 });
-
-params : {
-    detectionModel: 'detection_01',
-    returnFaceAttributes: 'age,gender,headPose,smile,facialHair,glasses,emotion,hair,makeup,occlusion,accessories,blur,exposure,noise',
-    returnFaceId: true
-}
