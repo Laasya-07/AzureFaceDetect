@@ -11,6 +11,5 @@ PRE-REQUISITES:
   1. Dropbox account
   2. Excel online account
   3. Azure account
-  4. That's it!
   
   
